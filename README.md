@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Carbitrages Frontend
 
-## Getting Started
+Revolutionary car buying platform frontend built with Next.js, TypeScript, and Tailwind CSS.
 
-First, run the development server:
+## 🚀 Features
 
+- **Modern Stack**: Next.js 15 with TypeScript and Tailwind CSS
+- **Authentication**: Complete user registration and login system
+- **State Management**: Redux Toolkit with persistence
+- **Responsive Design**: Mobile-first approach with beautiful UI
+- **Form Validation**: Zod schemas with React Hook Form
+- **Icons**: Lucide React icons for modern interface
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS v3
+- **State Management**: Redux Toolkit + Redux Persist
+- **Forms**: React Hook Form + Zod validation
+- **HTTP Client**: Axios with interceptors
+- **Icons**: Lucide React
+
+## 🏃‍♂️ Getting Started
+
+1. **Install dependencies**:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Set up environment variables**:
+```bash
+cp .env.example .env.local
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **Run the development server**:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. **Open your browser**:
+Navigate to [http://localhost:3000](http://localhost:3000)
 
-## Learn More
+## 📁 Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/                 # Next.js App Router pages
+├── components/          # Reusable UI components
+│   ├── auth/           # Authentication components
+│   └── ui/             # Base UI components
+├── lib/                # Utility functions
+├── providers/          # React context providers
+├── services/           # API service functions
+└── store/              # Redux store and slices
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔐 Authentication Flow
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- User registration with role selection (buyer/dealer)
+- Secure login with JWT tokens
+- Password strength validation
+- Token refresh mechanism
+- Protected routes
 
-## Deploy on Vercel
+## 🎨 UI Components
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Built with custom Tailwind CSS components:
+- Buttons with variants
+- Form inputs with validation states
+- Cards and layouts
+- Responsive navigation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📱 Responsive Design
+
+- Mobile-first approach
+- Breakpoint system with Tailwind CSS
+- Touch-friendly interfaces
+- Optimized for all screen sizes
+
+## 🔗 API Integration
+
+- Axios HTTP client with interceptors
+- Automatic token refresh
+- Error handling and retry logic
+- TypeScript API interfaces
+
+## 🚀 Deployment
+
+The app is ready for deployment on platforms like:
+- Vercel (recommended)
+- Netlify
+- AWS Amplify
+- Docker containers
+
+## 📄 License
+
+This project is part of the Carbitrages MVP.
