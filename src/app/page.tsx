@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
-import { Car, Shield, Zap, CheckCircle } from 'lucide-react';
+import { Car, Zap, Shield, TrendingUp, Search, CheckCircle } from 'lucide-react';
 
 export default function HomePage() {
   return (
@@ -38,9 +38,14 @@ export default function HomePage() {
             no more hidden fees.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/auth/register">
+            <Link href="/search">
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700 px-8 py-3">
-                Start Buying Cars
+                Search Vehicles
+              </Button>
+            </Link>
+            <Link href="/auth/register">
+              <Button size="lg" variant="outline" className="px-8 py-3">
+                Get Started
               </Button>
             </Link>
             <Link href="/auth/register?role=dealer">
@@ -48,6 +53,41 @@ export default function HomePage() {
                 Join as Dealer
               </Button>
             </Link>
+          </div>
+        </div>
+
+        {/* Quick Search Section */}
+        <div className="mt-16 bg-white rounded-2xl shadow-lg p-8">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Find Your Perfect Vehicle</h2>
+            <p className="text-gray-600">Search thousands of vehicles with transparent pricing</p>
+          </div>
+          
+          <div className="max-w-2xl mx-auto">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1">
+                <input
+                  type="text"
+                  placeholder="Search by make, model, or location..."
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <Link href="/search">
+                <Button className="bg-blue-600 hover:bg-blue-700 px-8 py-3 whitespace-nowrap">
+                  <Search className="h-4 w-4 mr-2" />
+                  Search Now
+                </Button>
+              </Link>
+            </div>
+            
+            <div className="flex flex-wrap gap-2 mt-4 justify-center">
+              <span className="text-sm text-gray-500">Popular searches:</span>
+              <Link href="/search?make=toyota" className="text-sm text-blue-600 hover:underline">Toyota</Link>
+              <Link href="/search?make=honda" className="text-sm text-blue-600 hover:underline">Honda</Link>
+              <Link href="/search?make=ford" className="text-sm text-blue-600 hover:underline">Ford</Link>
+              <Link href="/search?bodyType=suv" className="text-sm text-blue-600 hover:underline">SUVs</Link>
+              <Link href="/search?condition=new" className="text-sm text-blue-600 hover:underline">New Cars</Link>
+            </div>
           </div>
         </div>
 
