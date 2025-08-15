@@ -1,78 +1,54 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Vehicle, SearchFilters, SearchResponse, SearchSuggestion } from '@/types/vehicle';
-import axios from 'axios';
+import { mockVehicleService } from '@/services/mockVehicleService';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-
-// Async thunks
+// Async thunks using mock service
 export const searchVehicles = createAsyncThunk(
   'vehicles/searchVehicles',
   async ({ filters, page = 1, limit = 12 }: { filters: SearchFilters; page?: number; limit?: number }) => {
-    const params = new URLSearchParams();
-    
-    if (filters.query) params.append('query', filters.query);
-    if (filters.make?.length) params.append('make', filters.make.join(','));
-    if (filters.model?.length) params.append('model', filters.model.join(','));
-    if (filters.yearMin) params.append('yearMin', filters.yearMin.toString());
-    if (filters.yearMax) params.append('yearMax', filters.yearMax.toString());
-    if (filters.priceMin) params.append('priceMin', filters.priceMin.toString());
-    if (filters.priceMax) params.append('priceMax', filters.priceMax.toString());
-    if (filters.mileageMax) params.append('mileageMax', filters.mileageMax.toString());
-    if (filters.condition?.length) params.append('condition', filters.condition.join(','));
-    if (filters.bodyType?.length) params.append('bodyType', filters.bodyType.join(','));
-    if (filters.fuelType?.length) params.append('fuelType', filters.fuelType.join(','));
-    if (filters.transmission?.length) params.append('transmission', filters.transmission.join(','));
-    if (filters.location?.city) params.append('city', filters.location.city);
-    if (filters.location?.state) params.append('state', filters.location.state);
-    if (filters.location?.radius) params.append('radius', filters.location.radius.toString());
-    if (filters.sortBy) params.append('sortBy', filters.sortBy);
-    if (filters.sortOrder) params.append('sortOrder', filters.sortOrder);
-    
-    params.append('page', page.toString());
-    params.append('limit', limit.toString());
-
-    const response = await axios.get(`${API_BASE_URL}/vehicles/search?${params.toString()}`);
-    return response.data;
+    const response = await mockVehicleService.searchVehicles(filters, page, limit);
+    return response;
   }
 );
 
 export const getVehicleById = createAsyncThunk(
   'vehicles/getVehicleById',
   async (vehicleId: string) => {
-    const response = await axios.get(`${API_BASE_URL}/vehicles/${vehicleId}`);
-    return response.data;
+    const vehicle = await mockVehicleService.getVehicleById(vehicleId);
+    return vehicle;
   }
 );
 
 export const getSimilarVehicles = createAsyncThunk(
   'vehicles/getSimilarVehicles',
   async (vehicleId: string) => {
-    const response = await axios.get(`${API_BASE_URL}/vehicles/${vehicleId}/similar`);
-    return response.data;
+    // For mock, return featured vehicles excluding the current one
+    const featured = await mockVehicleService.getFeaturedVehicles(4);
+    return featured.filter(v => v.id !== vehicleId);
   }
 );
 
 export const getSearchSuggestions = createAsyncThunk(
   'vehicles/getSearchSuggestions',
   async (query: string) => {
-    const response = await axios.get(`${API_BASE_URL}/vehicles/suggestions?q=${encodeURIComponent(query)}`);
-    return response.data;
+    const suggestions = await mockVehicleService.getSearchSuggestions(query);
+    return suggestions;
   }
 );
 
 export const toggleFavorite = createAsyncThunk(
   'vehicles/toggleFavorite',
-  async (vehicleId: string, { getState }) => {
-    const response = await axios.post(`${API_BASE_URL}/vehicles/${vehicleId}/favorite`);
-    return { vehicleId, isFavorite: response.data.isFavorite };
+  async (vehicleId: string) => {
+    // Mock implementation
+    return { vehicleId, isFavorite: true };
   }
 );
 
 export const getFavoriteVehicles = createAsyncThunk(
   'vehicles/getFavoriteVehicles',
   async () => {
-    const response = await axios.get(`${API_BASE_URL}/vehicles/favorites`);
-    return response.data;
+    // Mock implementation
+    return [];
   }
 );
 
@@ -178,8 +154,8 @@ const vehicleSlice = createSlice({
       })
       .addCase(searchVehicles.fulfilled, (state, action) => {
         state.searchLoading = false;
-        state.searchResponse = action.payload;
-        state.vehicles = action.payload.vehicles;
+        state.searchResponse = action.payload as any;
+        state.vehicles = action.payload.vehicles as any;
       })
       .addCase(searchVehicles.rejected, (state, action) => {
         state.searchLoading = false;
@@ -221,7 +197,7 @@ const vehicleSlice = createSlice({
       })
       .addCase(getSearchSuggestions.fulfilled, (state, action) => {
         state.suggestionsLoading = false;
-        state.suggestions = action.payload;
+        state.suggestions = action.payload as any;
       })
       .addCase(getSearchSuggestions.rejected, (state) => {
         state.suggestionsLoading = false;

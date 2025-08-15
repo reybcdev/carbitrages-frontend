@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Grid, List, SlidersHorizontal, ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { setViewMode, setCurrentPage, updateFilters } from '@/store/slices/vehicleSlice';
+import { setCurrentPage, updateFilters } from '@/store/slices/vehicleSlice';
 import VehicleCard from './VehicleCard';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
@@ -29,7 +29,6 @@ export default function SearchResults({ className }: SearchResultsProps) {
     searchResponse, 
     searchLoading, 
     searchError, 
-    viewMode, 
     currentPage,
     currentFilters 
   } = useAppSelector((state) => state.vehicles);
@@ -75,61 +74,91 @@ export default function SearchResults({ className }: SearchResultsProps) {
     }
 
     return (
-      <div className="flex items-center justify-center space-x-2 mt-8">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handlePageChange(page - 1)}
-          disabled={page <= 1}
-        >
-          Previous
-        </Button>
-        
-        {startPage > 1 && (
-          <>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handlePageChange(1)}
+      <div className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm">
+        <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
+          {/* Page Info */}
+          <div className="text-sm text-gray-600">
+            Page <span className="font-semibold text-gray-900">{page}</span> of{' '}
+            <span className="font-semibold text-gray-900">{totalPages}</span>
+          </div>
+
+          {/* Pagination Controls */}
+          <div className="flex items-center space-x-1">
+            <button
+              onClick={() => handlePageChange(page - 1)}
+              disabled={page <= 1}
+              className={cn(
+                "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+                page <= 1
+                  ? "text-gray-400 cursor-not-allowed"
+                  : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
+              )}
             >
-              1
-            </Button>
-            {startPage > 2 && <span className="text-gray-500">...</span>}
-          </>
-        )}
-        
-        {pages.map((pageNum) => (
-          <Button
-            key={pageNum}
-            variant={pageNum === page ? "default" : "outline"}
-            size="sm"
-            onClick={() => handlePageChange(pageNum)}
-          >
-            {pageNum}
-          </Button>
-        ))}
-        
-        {endPage < totalPages && (
-          <>
-            {endPage < totalPages - 1 && <span className="text-gray-500">...</span>}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handlePageChange(totalPages)}
+              ← Previous
+            </button>
+            
+            {startPage > 1 && (
+              <>
+                <button
+                  onClick={() => handlePageChange(1)}
+                  className="px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
+                >
+                  1
+                </button>
+                {startPage > 2 && (
+                  <span className="px-2 text-gray-400 text-sm">...</span>
+                )}
+              </>
+            )}
+            
+            {pages.map((pageNum) => (
+              <button
+                key={pageNum}
+                onClick={() => handlePageChange(pageNum)}
+                className={cn(
+                  "px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+                  pageNum === page
+                    ? "bg-blue-600 text-white shadow-sm"
+                    : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
+                )}
+              >
+                {pageNum}
+              </button>
+            ))}
+            
+            {endPage < totalPages && (
+              <>
+                {endPage < totalPages - 1 && (
+                  <span className="px-2 text-gray-400 text-sm">...</span>
+                )}
+                <button
+                  onClick={() => handlePageChange(totalPages)}
+                  className="px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
+                >
+                  {totalPages}
+                </button>
+              </>
+            )}
+            
+            <button
+              onClick={() => handlePageChange(page + 1)}
+              disabled={page >= totalPages}
+              className={cn(
+                "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+                page >= totalPages
+                  ? "text-gray-400 cursor-not-allowed"
+                  : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
+              )}
             >
-              {totalPages}
-            </Button>
-          </>
-        )}
-        
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handlePageChange(page + 1)}
-          disabled={page >= totalPages}
-        >
-          Next
-        </Button>
+              Next →
+            </button>
+          </div>
+
+          {/* Quick Jump */}
+          <div className="text-sm text-gray-500">
+            {searchResponse.total.toLocaleString()} total results
+          </div>
+        </div>
       </div>
     );
   };
@@ -150,39 +179,46 @@ export default function SearchResults({ className }: SearchResultsProps) {
   }
 
   return (
-    <div id="search-results" className={cn("space-y-6", className)}>
+    <div id="search-results" className={cn("space-y-8", className)}>
       {/* Results Header */}
-      <div className="bg-white border border-gray-200 rounded-lg p-4">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+      <div className="bg-white border border-gray-100 rounded-xl shadow-sm p-6">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-6 lg:space-y-0">
           {/* Results Count */}
           <div className="flex items-center space-x-4">
-            <div className="text-sm text-gray-600">
+            <div className="text-base text-gray-700">
               {searchLoading ? (
-                'Searching...'
+                <div className="flex items-center space-x-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
+                  <span className="font-medium">Searching...</span>
+                </div>
               ) : searchResponse ? (
-                <>
-                  Showing {((searchResponse.page - 1) * searchResponse.limit) + 1}-
-                  {Math.min(searchResponse.page * searchResponse.limit, searchResponse.total)} of{' '}
-                  <span className="font-medium text-gray-900">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2">
+                  <span className="text-gray-600">Showing</span>
+                  <span className="font-bold text-gray-900">
+                    {((searchResponse.page - 1) * searchResponse.limit) + 1}-
+                    {Math.min(searchResponse.page * searchResponse.limit, searchResponse.total)}
+                  </span>
+                  <span className="text-gray-600">of</span>
+                  <span className="font-bold text-blue-600 text-lg">
                     {searchResponse.total.toLocaleString()}
-                  </span>{' '}
-                  vehicles
-                </>
+                  </span>
+                  <span className="text-gray-600">vehicles</span>
+                </div>
               ) : (
-                'No results'
+                <span className="text-gray-500">No results</span>
               )}
             </div>
           </div>
 
           {/* Controls */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center">
             {/* Sort Dropdown */}
-            <div className="flex items-center space-x-2">
-              <ArrowUpDown className="h-4 w-4 text-gray-500" />
+            <div className="flex items-center space-x-3">
+              <ArrowUpDown className="h-5 w-5 text-gray-400" />
               <select
                 value={getCurrentSortValue()}
                 onChange={(e) => handleSortChange(e.target.value)}
-                className="text-sm border border-gray-300 rounded px-3 py-1 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="text-sm border border-gray-200 rounded-lg px-4 py-2.5 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all min-w-[200px]"
               >
                 {sortOptions.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -191,80 +227,66 @@ export default function SearchResults({ className }: SearchResultsProps) {
                 ))}
               </select>
             </div>
-
-            {/* View Mode Toggle */}
-            <div className="flex items-center border border-gray-300 rounded">
-              <button
-                onClick={() => dispatch(setViewMode('grid'))}
-                className={cn(
-                  "p-2 transition-colors",
-                  viewMode === 'grid' 
-                    ? "bg-blue-500 text-white" 
-                    : "text-gray-500 hover:text-gray-700"
-                )}
-              >
-                <Grid className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => dispatch(setViewMode('list'))}
-                className={cn(
-                  "p-2 transition-colors",
-                  viewMode === 'list' 
-                    ? "bg-blue-500 text-white" 
-                    : "text-gray-500 hover:text-gray-700"
-                )}
-              >
-                <List className="h-4 w-4" />
-              </button>
-            </div>
           </div>
         </div>
       </div>
 
       {/* Loading State */}
       {searchLoading && (
-        <div className="bg-white rounded-lg p-12 text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Searching for vehicles...</p>
+        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-16 text-center">
+          <div className="relative">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 border-t-blue-600 mx-auto mb-6"></div>
+            <div className="absolute inset-0 rounded-full bg-blue-100 opacity-20 animate-pulse"></div>
+          </div>
+          <h3 className="text-xl font-semibold text-gray-800 mb-2">Finding the perfect vehicles</h3>
+          <p className="text-gray-600">Searching through thousands of listings...</p>
         </div>
       )}
 
       {/* Empty State */}
       {!searchLoading && vehicles.length === 0 && (
-        <div className="bg-white rounded-lg p-12 text-center">
-          <div className="text-gray-400 mb-4">
-            <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        <div className="bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-xl p-16 text-center">
+          <div className="text-gray-300 mb-6">
+            <svg className="w-20 h-20 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No vehicles found</h3>
-          <p className="text-gray-600 mb-4">
-            Try adjusting your search criteria or filters to find more results.
+          <h3 className="text-2xl font-bold text-gray-800 mb-3">No vehicles found</h3>
+          <p className="text-gray-600 mb-6 max-w-md mx-auto">
+            We couldn't find any vehicles matching your criteria. Try adjusting your search filters or expanding your search area.
           </p>
-          <Button variant="outline">Clear All Filters</Button>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button variant="outline" className="bg-white hover:bg-gray-50">
+              Clear All Filters
+            </Button>
+            <Button className="bg-blue-600 hover:bg-blue-700">
+              Expand Search
+            </Button>
+          </div>
         </div>
       )}
 
-      {/* Results Grid/List */}
+      {/* Results List */}
       {!searchLoading && vehicles.length > 0 && (
-        <>
-          <div className={cn(
-            viewMode === 'grid' 
-              ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-              : "space-y-4"
-          )}>
-            {vehicles.map((vehicle) => (
-              <VehicleCard
+        <div className="space-y-8">
+          <div className="space-y-6">
+            {vehicles.map((vehicle, index) => (
+              <div
                 key={vehicle.id}
-                vehicle={vehicle}
-                viewMode={viewMode}
-              />
+                className="animate-fade-in"
+                style={{ animationDelay: `${index * 50}ms` }}
+              >
+                <VehicleCard
+                  vehicle={vehicle}
+                  viewMode="list"
+                />
+              </div>
             ))}
           </div>
 
           {/* Pagination */}
           {renderPagination()}
-        </>
+        </div>
       )}
     </div>
   );
