@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Heart, MapPin, Calendar, Gauge, Fuel, Settings } from 'lucide-react';
+import { Heart, MapPin, Calendar, Gauge, Fuel, Settings, Star, TrendingUp, Shield, Eye } from 'lucide-react';
 import { Vehicle } from '@/types/vehicle';
 import { useAppDispatch } from '@/store/hooks';
 import { toggleFavorite } from '@/store/slices/vehicleSlice';
@@ -44,7 +44,7 @@ export default function VehicleCard({ vehicle, viewMode = 'grid', className }: V
 
   if (viewMode === 'list') {
     return (
-      <Link href={`/vehicles/${vehicle.id}`}>
+      <Link href={`/vehicle/${vehicle.id}`}>
         <div className={cn(
           "bg-white border border-gray-100 rounded-xl p-6 hover:shadow-xl transition-all duration-300",
           "cursor-pointer group transform hover:-translate-y-0.5", className
@@ -212,7 +212,7 @@ export default function VehicleCard({ vehicle, viewMode = 'grid', className }: V
 
   // Grid view
   return (
-    <Link href={`/vehicles/${vehicle.id}`}>
+    <Link href={`/vehicle/${vehicle.id}`}>
       <div className={cn(
         "bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300",
         "cursor-pointer group transform hover:-translate-y-1", className

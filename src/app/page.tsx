@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Car, Zap, Shield, TrendingUp, Search, CheckCircle } from 'lucide-react';
+import SearchAutocomplete from '@/components/search/SearchAutocomplete';
 
 export default function HomePage() {
   return (
@@ -64,21 +65,11 @@ export default function HomePage() {
           </div>
           
           <div className="max-w-2xl mx-auto">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="flex-1">
-                <input
-                  type="text"
-                  placeholder="Search by make, model, or location..."
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-              <Link href="/search">
-                <Button className="bg-blue-600 hover:bg-blue-700 px-8 py-3 whitespace-nowrap">
-                  <Search className="h-4 w-4 mr-2" />
-                  Search Now
-                </Button>
-              </Link>
-            </div>
+            <SearchAutocomplete
+              placeholder="Search by make, model, or location..."
+              className="w-full"
+              showRecentSearches={false}
+            />
             
             <div className="flex flex-wrap gap-2 mt-4 justify-center">
               <span className="text-sm text-gray-500">Popular searches:</span>
